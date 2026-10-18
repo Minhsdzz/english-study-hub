@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Study Hub | 0 - 6.5 IELTS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar / Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <h2>🇬🇧 Study Hub</h2>
+        <span class="badge">Mục tiêu: 6.5 IELTS</span>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn active" data-tab="today">📅 Lịch học hôm nay</button>
+        <button class="nav-btn" data-tab="weekly">🗓️ Lịch trình tuần</button>
+        <button class="nav-btn" data-tab="roadmap">🚀 Lộ trình 0 - 6.5</button>
+        <button class="nav-btn" data-tab="resources">📚 Kho tài liệu</button>
+        <button class="nav-btn" data-tab="vocab">✍️ Sổ từ vựng</button>
+      </nav>
+
+      <!-- Đồng hồ bấm giờ học tập -->
+      <div class="timer-widget">
+        <h3>⏱️ Đồng hồ tập trung</h3>
+        <div id="timer-display" class="timer-display">25:00</div>
+        <div class="timer-presets">
+          <button class="preset-btn" data-minutes="15">15p</button>
+          <button class="preset-btn" data-minutes="20">20p</button>
+          <button class="preset-btn" data-minutes="30">30p</button>
+        </div>
+        <div class="timer-controls">
+          <button id="timer-start" class="btn-primary">Bắt đầu</button>
+          <button id="timer-reset" class="btn-secondary">Đặt lại</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-header">
+        <div>
+          <h1 id="current-date-title">Hôm nay</h1>
+          <p id="current-day-focus" class="subtitle">Đang tải trọng tâm bài học...</p>
+        </div>
+        <div class="header-actions">
+          <div class="progress-box">
+            <span>Tiến độ hôm nay: <strong id="today-progress-text">0%</strong></span>
+            <div class="progress-bar">
+              <div id="today-progress-fill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+          <button id="theme-toggle" class="btn-icon" title="Đổi giao diện Sáng/Tối">🌙</button>
+        </div>
+      </header>
+
+      <!-- TAB 1: LỊCH HỌC HÔM NAY -->
+      <section id="tab-today" class="tab-section active">
+        <div id="today-schedule-container" class="schedule-grid"></div>
+      </section>
+
+      <!-- TAB 2: LỊCH TRÌNH CẢ TUẦN -->
+      <section id="tab-weekly" class="tab-section">
+        <div id="weekly-schedule-container"></div>
+      </section>
+
+      <!-- TAB 3: LỘ TRÌNH 0 - 6.5 IELTS -->
+      <section id="tab-roadmap" class="tab-section">
+        <div id="roadmap-container" class="roadmap-list"></div>
+      </section>
+
+      <!-- TAB 4: KHO TÀI LIỆU -->
+      <section id="tab-resources" class="tab-section">
+        <div class="filter-bar">
+          <input type="text" id="resource-search" placeholder="Tìm nhanh trang web, công cụ luyện nghe, từ điển...">
+          <div class="category-filters" id="resource-categories">
+            <button class="filter-chip active" data-cat="all">Tất cả</button>
+            <button class="filter-chip" data-cat="vocab">Từ vựng & Phát âm</button>
+            <button class="filter-chip" data-cat="reading">Đọc & Ngữ pháp</button>
+            <button class="filter-chip" data-cat="listening">Nghe & Giao tiếp</button>
+            <button class="filter-chip" data-cat="test">Kiểm tra trình độ</button>
+          </div>
+        </div>
+        <div id="resources-container" class="resources-grid"></div>
+      </section>
+
+      <!-- TAB 5: SỔ TỪ VỰNG MỖI NGÀY -->
+      <section id="tab-vocab" class="tab-section">
+        <div class="vocab-layout">
+          <form id="vocab-form" class="vocab-card">
+            <h3>➕ Thêm từ mới hôm nay (Mục tiêu: 5–10 từ/ngày)</h3>
+            <div class="form-group">
+              <label>Từ vựng & Từ loại</label>
+              <input type="text" id="vocab-word" placeholder="VD: resilient (adj)" required>
+            </div>
+            <div class="form-group">
+              <label>Phiên âm (IPA) & Nghĩa</label>
+              <input type="text" id="vocab-meaning" placeholder="VD: /rɪˈzɪliənt/ - Kiên cường, mau phục hồi" required>
+            </div>
+            <div class="form-group">
+              <label>Collocations / Phrasal Verbs / Câu ví dụ</label>
+              <textarea id="vocab-example" rows="3" placeholder="Ghi lại cấu trúc từ và câu ví dụ tra từ Longman..."></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Lưu vào sổ từ vựng</button>
+          </form>
+
+          <div class="vocab-list-wrapper">
+            <div class="vocab-list-header">
+              <h3>📖 Danh sách từ đã lưu (<span id="vocab-count">0</span>)</h3>
+              <a href="https://www.ldoceonline.com/" target="_blank" class="link-btn">🔍 Mở từ điển Longman</a>
+            </div>
+            <div id="vocab-list" class="vocab-items"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toàn bộ Dữ liệu & Xử lý Tương tác -->
+  <script>
+    // ================= 1. DỮ LIỆU KHO TÀI LIỆU =================
+    const STUDY_RESOURCES = [
+      { id: "res-vocab-1", category: "vocab", categoryName: "Từ vựng & Phát âm", title: "Vocabulary.com", description: "Trang web học và làm bài tập trắc nghiệm củng cố ngữ cảnh từ vựng.", url: "https://www.vocabulary.com/learner/", tag: "Bài tập từ vựng" },
+      { id: "res-vocab-2", category: "vocab", categoryName: "Từ vựng & Phát âm", title: "Từ điển Longman (LDOCE)", description: "Tra từ chuẩn xác: ngữ nghĩa, IPA, phát âm audio, collocations và câu ví dụ.", url: "https://www.ldoceonline.com/", tag: "Từ điển chính" },
+      { id: "res-vocab-3", category: "vocab", categoryName: "Từ vựng & Phát âm", title: "Speech Topic Generator", description: "Tạo chủ đề ngẫu nhiên để học từ vựng và luyện phản xạ nói mỗi ngày.", url: "https://speechtopicgen.com/", tag: "Phản xạ" },
+      { id: "res-vocab-4", category: "vocab", categoryName: "Từ vựng & Phát âm", title: "Natural Readers", description: "Trang web luyện giọng đọc AI (Text-to-Speech) giúp đối chiếu ngữ điệu và phát âm.", url: "https://www.naturalreaders.com/", tag: "AI Voice" },
+      { id: "res-vocab-5", category: "vocab", categoryName: "Từ vựng & Phát âm", title: "Danh sách từ vựng cơ bản Cambridge (PDF)", description: "Tài liệu tổng hợp từ vựng nền tảng chuẩn của Cambridge.", url: "https://www.cambridgeenglish.org/Images/220994-vocabulary-list.pdf", tag: "PDF Từ vựng" },
+      { id: "res-vocab-6", category: "vocab", categoryName: "Từ vựng & Phát âm", title: "1000 từ tiếng Anh thông dụng nhất", description: "Danh sách 1000 từ vựng cốt lõi sử dụng thường xuyên nhất trong tiếng Anh.", url: "https://www.1000mostcommonenglishwords.com/", tag: "Cơ bản" },
+      { id: "res-read-1", category: "reading", categoryName: "Đọc & Ngữ pháp", title: "Lingua Reading", description: "Kho bài đọc phân theo trình độ (A1-C1) kèm câu hỏi kiểm tra đọc hiểu.", url: "https://lingua.com/english/reading/", tag: "Luyện đọc" },
+      { id: "res-read-2", category: "reading", categoryName: "Đọc & Ngữ pháp", title: "Ereading Worksheets", description: "Kho bài tập thực hành ngữ pháp và cấu trúc đọc hiểu phong phú.", url: "https://www.ereadingworksheets.com/", tag: "Bài tập ngữ pháp" },
+      { id: "res-read-3", category: "reading", categoryName: "Đọc & Ngữ pháp", title: "British Council LearnEnglish", description: "Nguồn tài liệu đọc hiểu và ngữ pháp chuẩn quốc tế theo từng cấp độ.", url: "https://learnenglish.britishcouncil.org/", tag: "Chuẩn quốc tế" },
+      { id: "res-listen-1", category: "listening", categoryName: "Nghe & Giao tiếp", title: "Episoden", description: "Kết nối và trò chuyện tiếng Anh 1-on-1 miễn phí với bạn bè quốc tế.", url: "https://www.episoden.com/faq/1-1", tag: "Giao tiếp 1-1" },
+      { id: "res-listen-2", category: "listening", categoryName: "Nghe & Giao tiếp", title: "Free4talk", description: "Tham gia các phòng trò chuyện trực tuyến miễn phí với người học toàn cầu.", url: "https://www.free4talk.com/", tag: "Phòng nói chuyện" },
+      { id: "res-listen-3", category: "listening", categoryName: "Nghe & Giao tiếp", title: "YouTube: English Easy Practice", description: "Luyện nghe thụ động và nhại lại (Shadowing) qua các bài hội thoại thực tế.", url: "https://youtube.com/@englisheasypractice", tag: "Shadowing" },
+      { id: "res-listen-4", category: "listening", categoryName: "Nghe & Giao tiếp", title: "YouTube: Learn English with Jessica", description: "Kênh luyện nghe và hội thoại hoạt hình theo tình huống đời sống.", url: "https://youtube.com/@learnenglishwithjessica", tag: "Hội thoại" },
+      { id: "res-listen-5", category: "listening", categoryName: "Nghe & Giao tiếp", title: "Speak English with Vanessa", description: "Bài học hội thoại tiếng Anh chuyên sâu (1.5 HOUR English Conversation Lesson).", url: "https://www.youtube.com/@SpeakEnglishWithVanessa", tag: "Video bài giảng" },
+      { id: "res-listen-6", category: "listening", categoryName: "Nghe & Giao tiếp", title: "75 Chủ đề hội thoại thông dụng", description: "Danh sách 75 chủ đề giao tiếp hàng ngày có kèm audio nghe và phụ đề.", url: "https://basicenglishspeaking.com/daily-english-conversation-topics/", tag: "75 Chủ đề" },
+      { id: "res-listen-7", category: "listening", categoryName: "Nghe & Giao tiếp", title: "Daily Dictation", description: "Bài tập nghe từng câu và gõ chép chính tả giúp bắt âm, nối âm cực nhạy.", url: "https://dailydictation.com/exercises/", tag: "Chép chính tả" },
+      { id: "res-listen-8", category: "listening", categoryName: "Nghe & Giao tiếp", title: "Everyday Conversations (PDF Chính phủ Mỹ)", description: "Tài liệu PDF các cuộc hội thoại Anh - Mỹ chuẩn từ American English.", url: "https://americanenglish.state.gov/files/ae/resource_files/everyday_conversations_-_learning_american_english.pdf", tag: "PDF Hội thoại" },
+      { id: "res-test-1", category: "test", categoryName: "Kiểm tra trình độ", title: "Test-English", description: "Kiểm tra định kỳ Nghe, Đọc, Ngữ pháp và Từ vựng theo chuẩn khung tham chiếu.", url: "https://test-english.com", tag: "Test tổng hợp" },
+      { id: "res-test-2", category: "test", categoryName: "Kiểm tra trình độ", title: "Use English", description: "Hệ thống bài kiểm tra và đánh giá tiến độ tiếng Anh trực tuyến.", url: "https://useenglish.com", tag: "Check-up" }
+    ];
+
+    // ================= 2. DỮ LIỆU LỊCH HỌC TUẦN =================
+    const WEEKLY_SCHEDULE = [
+      {
+        id: "mon-wed-fri",
+        days: [1, 3, 5],
+        dayLabel: "Thứ 2, Thứ 4, Thứ 6",
+        focus: "Tập trung Từ vựng, Nghe & Chép chính tả",
+        sessions: [
+          {
+            period: "Sáng (25–30 phút)",
+            title: "Từ vựng & Phát âm",
+            goal: "5–10 từ mới/ngày",
+            tasks: [
+              { id: "mwf-m1", name: "Chọn 5–10 từ vựng mục tiêu", detail: "Lấy từ Danh sách từ cơ bản Cambridge hoặc 1000 từ thông dụng nhất.", duration: 10, links: [{ label: "Cambridge PDF", url: "https://www.cambridgeenglish.org/Images/220994-vocabulary-list.pdf" }, { label: "1000 từ thông dụng", url: "https://www.1000mostcommonenglishwords.com/" }] },
+              { id: "mwf-m2", name: "Tra từ & Ghi chép", detail: "Tra ngữ nghĩa, IPA, phát âm chuẩn và câu ví dụ trên Longman. Ghi lại collocations/phrasal verbs đi kèm.", duration: 10, links: [{ label: "Từ điển Longman", url: "https://www.ldoceonline.com/" }] },
+              { id: "mwf-m3", name: "Luyện tập ngữ cảnh", detail: "Thực hành bài tập trắc nghiệm trên Vocabulary.com để củng cố ngữ cảnh sử dụng của từ.", duration: 10, links: [{ label: "Vocabulary.com", url: "https://www.vocabulary.com/learner/" }] }
+            ]
+          },
+          {
+            period: "Tối (30–45 phút)",
+            title: "Luyện nghe & Chép chính tả",
+            goal: "1 bài nghe short/medium",
+            tasks: [
+              { id: "mwf-e1", name: "Chép chính tả (20 phút)", detail: "Hoàn thành 1 bài nghe ngắn tại Daily Dictation. Nghe từng câu, gõ lại chính xác, kiểm tra lỗi nối âm và ngữ âm.", duration: 20, links: [{ label: "Daily Dictation", url: "https://dailydictation.com/exercises/" }] },
+              { id: "mwf-e2", name: "Nghe thụ động & Nhại lại - Shadowing (15–20 phút)", detail: "Xem 1 video hội thoại trên English Easy Practice hoặc Learn English with Jessica. Bật phụ đề, đọc nhại lại theo nhân vật.", duration: 20, links: [{ label: "English Easy Practice", url: "https://youtube.com/@englisheasypractice" }, { label: "Learn English with Jessica", url: "https://youtube.com/@learnenglishwithjessica" }] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "tue-thu-sat",
+        days: [2, 4, 6],
+        dayLabel: "Thứ 3, Thứ 5, Thứ 7",
+        focus: "Tập trung Đọc hiểu, Ngữ pháp & Giao tiếp phản xạ",
+        sessions: [
+          {
+            period: "Sáng (25–30 phút)",
+            title: "Đọc hiểu & Ngữ pháp",
+            goal: "1 bài đọc ngắn + 1 điểm ngữ pháp",
+            tasks: [
+              { id: "tts-m1", name: "Luyện đọc Skimming & Scanning (15 phút)", detail: "Đọc 1 bài theo trình độ trên Lingua hoặc British Council. Đọc lướt lấy ý chính, đọc chi tiết tìm từ mới và trả lời câu hỏi.", duration: 15, links: [{ label: "Lingua Reading", url: "https://lingua.com/english/reading/" }, { label: "British Council", url: "https://learnenglish.britishcouncil.org/" }] },
+              { id: "tts-m2", name: "Củng cố ngữ pháp (15 phút)", detail: "Làm 1 bài tập thực hành ngữ pháp/cấu trúc liên quan tại Ereading Worksheets để ghi nhớ quy tắc.", duration: 15, links: [{ label: "Ereading Worksheets", url: "https://www.ereadingworksheets.com/" }] }
+            ]
+          },
+          {
+            period: "Tối (45–60 phút)",
+            title: "Luyện nói & Giao tiếp phản xạ",
+            goal: "1–2 chủ đề hội thoại + 1 phiên nói 20 phút",
+            tasks: [
+              { id: "tts-e1", name: "Chuẩn bị mẫu câu (15–20 phút)", detail: "Học mẫu câu theo 1–2 chủ đề trong 75 chủ đề hội thoại hoặc PDF Hội thoại Anh - Mỹ. Đọc to nhiều lần để quen cơ miệng.", duration: 20, links: [{ label: "75 Chủ đề hội thoại", url: "https://basicenglishspeaking.com/daily-english-conversation-topics/" }, { label: "PDF Hội thoại Anh - Mỹ", url: "https://americanenglish.state.gov/files/ae/resource_files/everyday_conversations_-_learning_american_english.pdf" }] },
+              { id: "tts-e2", name: "Thực hành giao tiếp trực tiếp (25–30 phút)", detail: "Ghép cặp luyện nói 1-on-1 với người nước ngoài trên Episoden hoặc tham gia phòng nói chuyện trên Free4talk.", duration: 30, links: [{ label: "Episoden (1-on-1)", url: "https://www.episoden.com/faq/1-1" }, { label: "Free4talk", url: "https://www.free4talk.com/" }] }
+            ]
+          }
+        ]
+      },
+      {
+        id: "sunday",
+        days: [0],
+        dayLabel: "Chủ Nhật",
+        focus: "Ôn tập & Kiểm tra trình độ định kỳ",
+        sessions: [
+          {
+            period: "Sáng (30 phút)",
+            title: "Ôn tập từ vựng & Chỉnh sửa phát âm với AI",
+            goal: "Ôn 15–30 từ vựng trong tuần",
+            tasks: [
+              { id: "sun-m1", name: "Phản xạ từ vựng (15 phút)", detail: "Tạo chủ đề ngẫu nhiên bằng Speech Topic Generator. Nói tự do 1–2 phút mỗi chủ đề, lồng ghép 15–30 từ đã học trong tuần.", duration: 15, links: [{ label: "Speech Topic Generator", url: "https://speechtopicgen.com/" }] },
+              { id: "sun-m2", name: "Luyện ngữ điệu AI (15 phút)", detail: "Dán đoạn văn bản đã viết/đọc trong tuần vào Natural Readers để nghe AI đọc mẫu, thu âm giọng bản thân và so sánh.", duration: 15, links: [{ label: "Natural Readers", url: "https://www.naturalreaders.com/" }] }
+            ]
+          },
+          {
+            period: "Tối (30–45 phút)",
+            title: "Kiểm tra trình độ & Đánh giá tiến độ",
+            goal: "1 bài kiểm tra ngắn",
+            tasks: [
+              { id: "sun-e1", name: "Thực hiện bài test tổng hợp", detail: "Làm 1 bài test ngắn (Nghe/Đọc/Ngữ pháp) trên Test English hoặc Use English để đánh giá tiến bộ theo tuần.", duration: 35, links: [{ label: "Test-English", url: "https://test-english.com" }, { label: "Use English", url: "https://useenglish.com" }] }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // ================= 3. DỮ LIỆU LỘ TRÌNH 0 - 6.5 IELTS =================
+    const IELTS_ROADMAP = [
+      {
+        stage: "Giai Đoạn 1",
+        title: "Xây Dựng Nền Tảng Cơ Bản",
+        target: "0 - 3.5 IELTS",
+        mainGoal: "Xóa mất gốc, phát âm chuẩn IPA, nắm 500-800 từ vựng cơ bản và các thì cơ bản.",
+        tools: [
+          { group: "Từ vựng & Phát âm", items: ["Danh sách Cambridge", "1000 từ thông dụng", "Longman Dictionary"] },
+          { group: "Nghe & Nói", items: ["Daily Dictation", "Natural Readers"] },
+          { group: "Đọc & Ngữ pháp", items: ["Lingua", "Ereading Worksheets"] }
+        ],
+        actions: [
+          "Học bảng phiên âm IPA (44 âm) trong 2 tuần đầu.",
+          "Mỗi ngày học 5-10 từ vựng cơ bản, tra từ điển Longman nghe audio và gõ ví dụ.",
+          "Luyện chép chính tả các câu ngắn (dưới 1 phút) trên Daily Dictation.",
+          "Đọc các bài A1/A2 trên Lingua và làm bài tập ngữ pháp cơ bản (hiện tại đơn, quá khứ đơn, tương lai đơn)."
+        ]
+      },
+      {
+        stage: "Giai Đoạn 2",
+        title: "Tăng Tốc Trung Cấp & Pre-IELTS",
+        target: "3.5 - 5.0 IELTS",
+        mainGoal: "Tích lũy 1.500 - 2.500 từ vựng, nắm vững ngữ pháp phức hợp (mệnh đề quan hệ, câu điều kiện, câu thụ động), luyện phản xạ nghe - nói tự nhiên.",
+        tools: [
+          { group: "Từ vựng", items: ["Vocabulary.com"] },
+          { group: "Nghe & Nói", items: ["English Easy Practice", "Learn English with Jessica", "Everyday Conversations (PDF)", "Episoden", "Free4talk"] },
+          { group: "Đọc & Ngữ pháp", items: ["British Council"] },
+          { group: "Kiểm tra", items: ["Test English", "Use English"] }
+        ],
+        actions: [
+          "Mở rộng từ vựng theo các chủ đề đời sống (Health, Education, Environment, Technology) bằng Vocabulary.com.",
+          "Áp dụng kỹ thuật Shadowing (đọc nhại) theo video của Learn English with Jessica.",
+          "Tập giao tiếp 1-1 trên Episoden / Free4talk 2-3 buổi/tuần theo các mẫu câu trong Everyday Conversations.",
+          "Đọc hiểu bài B1/B2 trên British Council, phân tích cấu trúc câu phức."
+        ]
+      },
+      {
+        stage: "Giai Đoạn 3",
+        title: "Luyện Thi Chuyên Sâu IELTS",
+        target: "5.0 - 6.5 IELTS",
+        mainGoal: "Làm quen với định dạng đề thi IELTS (Listening, Reading, Writing, Speaking), phát triển chiến thuật làm từng dạng bài, tối ưu hóa thời gian và tiêu chí chấm điểm IELTS.",
+        tools: [
+          { group: "Speaking & Phản xạ", items: ["Speech Topic Generator"] },
+          { group: "Luyện đề & Đánh giá", items: ["Test English", "Use English"] }
+        ],
+        actions: [
+          "Listening: Chuyển từ chép chính tả sang luyện nghe các dạng bài IELTS Listening (Section 1-4), chú trọng Note-taking và nhận diện Synonyms/Paraphrasing.",
+          "Reading: Luyện kỹ thuật Skimming, Scanning, Keyword Technique cho các dạng bài True/False/Not Given, Matching Headings, Multiple Choice.",
+          "Writing: Học cấu trúc bài Task 1 (Line graph, Bar chart, Pie chart, Table, Process, Map) và Task 2 (Opinion, Discussion, Problem-Solution). Chú trọng Cohesive devices và từ vựng Academic.",
+          "Speaking: Mở rộng câu trả lời Part 1, cấu trúc bài Part 2 (câu chuyện 2 phút) và tư duy phân tích Part 3. Luyện nói tự do trên Speech Topic Generator.",
+          "Luyện đề & Đánh giá: Định kỳ làm đề thi mô phỏng, bấm giờ và tính điểm trên các nền tảng kiểm tra trực tuyến."
+        ]
+      }
+    ];
+
+    // ================= 4. ĐỒNG HỒ BẤM GIỜ (TIMER) =================
+    let timerInterval = null;
+    let remainingSeconds = 25 * 60;
+    let isRunning = false;
+
+    const timerDisplay = document.getElementById('timer-display');
+    const startBtn = document.getElementById('timer-start');
+    const resetBtn = document.getElementById('timer-reset');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateTimerUI() {
+      timerDisplay.textContent = formatTime(remainingSeconds);
+    }
+
+    function setTimerMinutes(minutes, autoStart = false) {
+      clearInterval(timerInterval);
+      isRunning = false;
+      remainingSeconds = minutes * 60;
+      startBtn.textContent = 'Bắt đầu';
+      updateTimerUI();
+      if (autoStart) toggleTimer();
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        startBtn.textContent = 'Tiếp tục';
+      } else {
+        isRunning = true;
+        startBtn.textContent = 'Tạm dừng';
+        timerInterval = setInterval(() => {
+          if (remainingSeconds > 0) {
+            remainingSeconds--;
+            updateTimerUI();
+          } else {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBtn.textContent = 'Bắt đầu';
+            alert('🎉 Đã hết giờ học phiên này! Hãy nghỉ ngơi một chút nhé.');
+          }
+        }, 1000);
+      }
+    }
+
+    startBtn.addEventListener('click', toggleTimer);
+    resetBtn.addEventListener('click', () => setTimerMinutes(25, false));
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mins = parseInt(btn.getAttribute('data-minutes'), 10);
+        setTimerMinutes(mins, false);
+      });
+    });
+
+    // ================= 5. LƯU TIẾN ĐỘ & LỊCH HỌC HÔM NAY =================
+    const DAY_NAMES = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+
+    function getTodayKey() {
+      const now = new Date();
+      return `study_tasks_${now.getFullYear()}_${now.getMonth() + 1}_${now.getDate()}`;
+    }
+
+    function getCompletedTasks() {
+      const raw = localStorage.getItem(getTodayKey());
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function toggleTaskCompletion(taskId, isChecked) {
+      let completed = getCompletedTasks();
+      if (isChecked && !completed.includes(taskId)) {
+        completed.push(taskId);
+      } else if (!isChecked) {
+        completed = completed.filter(id => id !== taskId);
+      }
+      localStorage.setItem(getTodayKey(), JSON.stringify(completed));
+      updateProgressBar();
+    }
+
+    function updateProgressBar() {
+      const checkboxes = document.querySelectorAll('#today-schedule-container input[type="checkbox"]');
+      const total = checkboxes.length;
+      if (total === 0) return;
+
+      let checkedCount = 0;
+      checkboxes.forEach(cb => { if (cb.checked) checkedCount++; });
+
+      const percent = Math.round((checkedCount / total) * 100);
+      document.getElementById('today-progress-text').textContent = `${percent}% (${checkedCount}/${total})`;
+      document.getElementById('today-progress-fill').style.width = `${percent}%`;
+    }
+
+    function renderTodaySchedule() {
+      const now = new Date();
+      const dayIndex = now.getDay();
+      const todaySchedule = WEEKLY_SCHEDULE.find(item => item.days.includes(dayIndex)) || WEEKLY_SCHEDULE[0];
+
+      const dateStr = now.toLocaleDateString('vi-VN');
+      document.getElementById('current-date-title').textContent = `${DAY_NAMES[dayIndex]} (${dateStr})`;
+      document.getElementById('current-day-focus').textContent = `Trọng tâm: ${todaySchedule.focus}`;
+
+      const completedTasks = getCompletedTasks();
+      const container = document.getElementById('today-schedule-container');
+      container.innerHTML = '';
+
+      todaySchedule.sessions.forEach(session => {
+        const card = document.createElement('div');
+        card.className = 'session-card';
+
+        const tasksHTML = session.tasks.map(task => {
+          const isDone = completedTasks.includes(task.id);
+          const linksHTML = task.links.map(l => 
+            `<a href="${l.url}" target="_blank" class="link-btn">🔗 ${l.label}</a>`
+          ).join('');
+
+          return `
+            <div class="task-item ${isDone ? 'completed' : ''}" id="item-${task.id}">
+              <div class="task-top">
+                <label class="task-label">
+                  <input type="checkbox" data-task-id="${task.id}" ${isDone ? 'checked' : ''}>
+                  <span class="task-title">${task.name}</span>
+                </label>
+              </div>
+              <p class="task-detail">${task.detail}</p>
+              <div class="task-actions">
+                <button class="btn-secondary start-task-timer" data-duration="${task.duration}">
+                  ⏱️ Bấm giờ ${task.duration}p
+                </button>
+                ${linksHTML}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="session-header">
+            <div>
+              <span class="badge">${session.period}</span>
+              <h3 style="margin-top: 6px;">${session.title}</h3>
+            </div>
+            <small style="color: var(--text-secondary); font-weight: 600;">🎯 ${session.goal}</small>
+          </div>
+          <div class="session-tasks">${tasksHTML}</div>
+        `;
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', (e) => {
+          const taskId = e.target.getAttribute('data-task-id');
+          document.getElementById(`item-${taskId}`).classList.toggle('completed', e.target.checked);
+          toggleTaskCompletion(taskId, e.target.checked);
+        });
+      });
+
+      container.querySelectorAll('.start-task-timer').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mins = parseInt(btn.getAttribute('data-duration'), 10);
+          setTimerMinutes(mins, true);
+        });
+      });
+
+      updateProgressBar();
+    }
+
+    // ================= 6. SỔ TỪ VỰNG =================
+    const VOCAB_STORAGE_KEY = 'english_hub_vocab_list';
+
+    function getVocabList() {
+      const raw = localStorage.getItem(VOCAB_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }
+
+    function saveVocabList(list) {
+      localStorage.setItem(VOCAB_STORAGE_KEY, JSON.stringify(list));
+    }
+
+    function renderVocabList() {
+      const list = getVocabList();
+      const container = document.getElementById('vocab-list');
+      document.getElementById('vocab-count').textContent = list.length;
+
+      if (list.length === 0) {
+        container.innerHTML = `<p style="color: var(--text-secondary);">Chưa có từ vựng nào. Hãy tra từ điển Longman và lưu 5–10 từ mỗi sáng nhé!</p>`;
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div class="vocab-item">
+          <div>
+            <h4 style="color: var(--accent);">${item.word}</h4>
+            <p style="font-weight: 500; margin: 4px 0;">${item.meaning}</p>
+            ${item.example ? `<p style="font-size: 0.88rem; color: var(--text-secondary);">💡 ${item.example}</p>` : ''}
+            <small style="color: var(--text-secondary); font-size: 0.75rem;">Ngày lưu: ${item.date}</small>
+          </div>
+          <button class="delete-vocab-btn" data-id="${item.id}">🗑️ Xóa</button>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.delete-vocab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          saveVocabList(getVocabList().filter(v => v.id !== id));
+          renderVocabList();
+        });
+      });
+    }
+
+    document.getElementById('vocab-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const word = document.getElementById('vocab-word').value.trim();
+      const meaning = document.getElementById('vocab-meaning').value.trim();
+      const example = document.getElementById('vocab-example').value.trim();
+      if (!word || !meaning) return;
+
+      const list = getVocabList();
+      list.unshift({
+        id: Date.now().toString(),
+        word,
+        meaning,
+        example,
+        date: new Date().toLocaleDateString('vi-VN')
+      });
+      saveVocabList(list);
+      e.target.reset();
+      renderVocabList();
+    });
+
+    // ================= 7. ĐIỀU HƯỚNG TAB, LỘ TRÌNH, KHO TÀI LIỆU & DARK MODE =================
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const tabSections = document.querySelectorAll('.tab-section');
+
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        navBtns.forEach(b => b.classList.remove('active'));
+        tabSections.forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        const targetTab = btn.getAttribute('data-tab');
+        document.getElementById(`tab-${targetTab}`).classList.add('active');
+      });
+    });
+
+    function renderWeeklySchedule() {
+      const container = document.getElementById('weekly-schedule-container');
+      container.innerHTML = WEEKLY_SCHEDULE.map(group => `
+        <div class="weekly-block">
+          <div class="roadmap-header">
+            <h3>📅 ${group.dayLabel}</h3>
+            <span class="badge">${group.focus}</span>
+          </div>
+          <div class="schedule-grid" style="margin-top: 14px;">
+            ${group.sessions.map(sec => `
+              <div style="border: 1px solid var(--border); border-radius: 10px; padding: 14px;">
+                <strong>⏰ ${sec.period} —${sec.title}</strong>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Mục tiêu: ${sec.goal}</p>
+                <ul style="padding-left: 18px; font-size: 0.9rem;">
+                  ${sec.tasks.map(t => `<li style="margin-bottom: 6px;"><strong>${t.name}:</strong> ${t.detail}</li>`).join('')}
+                </ul>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderRoadmap() {
+      const container = document.getElementById('roadmap-container');
+      container.innerHTML = IELTS_ROADMAP.map(stage => `
+        <div class="roadmap-card">
+          <div class="roadmap-header">
+            <h3>🚀 ${stage.stage}: ${stage.title}</h3>
+            <span class="badge">Mục tiêu: ${stage.target}</span>
+          </div>
+          <p style="margin-bottom: 12px;"><strong>🎯 Trọng tâm:</strong> ${stage.mainGoal}</p>
+          <div style="margin-bottom: 12px;">
+            <strong>🛠️ Công cụ sử dụng:</strong>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
+              ${stage.tools.map(t => `<span class="badge" style="background: var(--bg-main); color: var(--text-primary); border: 1px solid var(--border);"><b>${t.group}:</b>${t.items.join(', ')}</span>`).join('')}
+            </div>
+          </div>
+          <strong>📌 Nội dung & Cách thực hiện:</strong>
+          <ul class="roadmap-actions-list">
+            ${stage.actions.map(act => `<li>${act}</li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
+    let currentCategory = 'all';
+    function renderResources() {
+      const keyword = document.getElementById('resource-search').value.toLowerCase().trim();
+      const container = document.getElementById('resources-container');
+
+      const filtered = STUDY_RESOURCES.filter(item => {
+        const matchCat = currentCategory === 'all' || item.category === currentCategory;
+        const matchKeyword = item.title.toLowerCase().includes(keyword) || item.description.toLowerCase().includes(keyword);
+        return matchCat && matchKeyword;
+      });
+
+      container.innerHTML = filtered.map(res => `
+        <div class="resource-card">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span class="badge">${res.tag}</span>
+              <small style="color: var(--text-secondary);">${res.categoryName}</small>
+            </div>
+            <h3 style="font-size: 1.08rem; margin-bottom: 6px;">${res.title}</h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary);">${res.description}</p>
+          </div>
+          <a href="${res.url}" target="_blank" class="btn-primary" style="justify-content: center;">Truy cập trang web ↗</a>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('resource-search').addEventListener('input', renderResources);
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentCategory = chip.getAttribute('data-cat');
+        renderResources();
+      });
+    });
+
+    const themeBtn = document.getElementById('theme-toggle');
+    if (localStorage.getItem('study_hub_theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+      themeBtn.textContent = '☀️';
+    }
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('study_hub_theme', isDark ? 'dark' : 'light');
+      themeBtn.textContent = isDark ? '☀️' : '🌙';
+    });
+
+    // Khởi tạo ngay khi mở trang
+    updateTimerUI();
+    renderTodaySchedule();
+    renderWeeklySchedule();
+    renderRoadmap();
+    renderResources();
+    renderVocabList();
+  </script>
+</body>
+</html>
